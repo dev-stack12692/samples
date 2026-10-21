@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Urban Cafe | Design Preview</title>
+<!-- Google Fonts: Luxury Serif Cormorant Garamond & Clean Geometric Montserrat -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Montserrat:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<style>
+        /* --- Noir & Ember Luxury Palette --- */
+        :root {
+            --bg-main: #0B0D0F;
+            --bg-card: #121518;
+            --bg-subtle: #181C22;
+            --gold-primary: #C5A46E;
+            --gold-glow: rgba(197, 164, 110, 0.18);
+            --gold-hover: #DFBE88;
+            --text-pure: #F3F4F6;
+            --text-dim: #8E96A0;
+            --border-soft: rgba(255, 255, 255, 0.05);
+            --font-serif: 'Cormorant Garamond', Georgia, serif;
+            --font-sans: 'Montserrat', system-ui, -apple-system, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            background-color: var(--bg-main);
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-pure);
+            font-family: var(--font-sans);
+            line-height: 1.65;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1240px;
+            margin: 0 auto;
+        }
+
+        .section-padding {
+            padding: 8rem 0;
+        }
+
+        /* --- Dynamic Top Scroll Progress Indicator --- */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            width: 0%;
+            background: linear-gradient(90deg, var(--gold-primary), #FFE8B8);
+            z-index: 10000;
+            transition: width 0.08s ease-out;
+            box-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        /* --- Bidirectional Scroll Animation Engine --- */
+        .animate-up {
+            opacity: 0;
+            transform: translateY(45px);
+            transition: opacity 0.85s cubic-bezier(0.25, 1, 0.5, 1), transform 0.85s cubic-bezier(0.25, 1, 0.5, 1);
+            will-change: transform, opacity;
+        }
+
+        .animate-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: opacity 0.85s cubic-bezier(0.25, 1, 0.5, 1), transform 0.85s cubic-bezier(0.25, 1, 0.5, 1);
+            will-change: transform, opacity;
+        }
+
+        .animate-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: opacity 0.85s cubic-bezier(0.25, 1, 0.5, 1), transform 0.85s cubic-bezier(0.25, 1, 0.5, 1);
+            will-change: transform, opacity;
+        }
+
+        /* Active visibility class triggered dynamically by IntersectionObserver */
+        .animate-up.active-view,
+        .animate-left.active-view,
+        .animate-right.active-view {
+            opacity: 1;
+            transform: translate(0, 0);
+        }
+
+        /* --- Typography & Badges --- */
+        h1, h2, h3, h4 {
+            font-family: var(--font-serif);
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        h2 {
+            font-size: 3rem;
+            margin-top: 0.4rem;
+            color: #FFFFFF;
+        }
+
+        .gold-subtitle {
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 3.5px;
+            color: var(--gold-primary);
+            display: inline-block;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+
+        /* --- Luxury Button Mechanics --- */
+        .gold-btn, .outline-btn {
+            display: inline-block;
+            padding: 0.95rem 2.2rem;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.35s ease;
+            cursor: pointer;
+        }
+
+        .gold-btn {
+            background: var(--gold-primary);
+            color: var(--bg-main);
+            border: 1px solid var(--gold-primary);
+            box-shadow: 0 4px 20px var(--gold-glow);
+        }
+
+        .gold-btn:hover {
+            background: var(--gold-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(197, 164, 110, 0.35);
+        }
+
+        .outline-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #FFFFFF;
+            backdrop-filter: blur(8px);
+        }
+
+        .outline-btn:hover {
+            border-color: var(--gold-primary);
+            color: var(--gold-primary);
+            background: rgba(197, 164, 110, 0.05);
+            transform: translateY(-3px);
+        }
+
+        /* --- Sticky Glassmorphic Navigation --- */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.4rem 0;
+            z-index: 1000;
+            background: rgba(11, 13, 15, 0.78);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--border-soft);
+            transition: padding 0.3s ease, background 0.3s ease;
+        }
+
+        .nav-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--font-serif);
+            font-size: 1.85rem;
+            text-decoration: none;
+            color: #FFFFFF;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        .logo span {
+            color: var(--gold-primary);
+            font-weight: 400;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2.2rem;
+        }
+
+        .nav-links a:not(.nav-cta) {
+            text-decoration: none;
+            font-size: 0.78rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold-primary);
+        }
+
+        .nav-cta {
+            border: 1px solid var(--gold-primary);
+            padding: 0.55rem 1.4rem;
+            color: var(--gold-primary);
+            border-radius: 3px;
+            font-size: 0.78rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .nav-cta:hover {
+            background: var(--gold-primary);
+            color: var(--bg-main);
+        }
+
+        /* --- Hero Section --- */
+        .hero-section {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 120px 0 60px;
+            background: radial-gradient(circle at center, rgba(197, 164, 110, 0.08) 0%, rgba(11, 13, 15, 0.95) 70%), 
+                        linear-gradient(rgba(11, 13, 15, 0.75), rgba(11, 13, 15, 0.98)),
+                        none no-repeat center center / cover;
+        }
+
+        .hero-center {
+            max-width: 860px;
+            margin: 0 auto;
+        }
+
+        .luxury-title {
+            font-size: 4.8rem;
+            line-height: 1.08;
+            font-weight: 400;
+            margin: 1.2rem 0 1.6rem;
+            color: #FFFFFF;
+        }
+
+        .hero-desc {
+            font-size: 1.15rem;
+            color: var(--text-dim);
+            max-width: 640px;
+            margin: 0 auto 3rem;
+            line-height: 1.7;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1.2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* --- Alternating Story Menu Sections --- */
+        .story-menu-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 9rem;
+            margin-top: 2rem;
+        }
+
+        .story-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 5rem;
+        }
+
+        .story-row.reverse {
+            flex-direction: row-reverse;
+        }
+
+        .story-text {
+            width: 46%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .story-image {
+            width: 48%;
+        }
+
+        .dish-number {
+            font-family: var(--font-serif);
+            font-size: 1.3rem;
+            color: var(--gold-primary);
+            opacity: 0.5;
+            margin-bottom: 0.4rem;
+        }
+
+        .dish-tag {
+            font-size: 0.72rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gold-primary);
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+        }
+
+        .story-text h3 {
+            font-size: 2.7rem;
+            line-height: 1.15;
+            margin-bottom: 1.2rem;
+            color: #FFFFFF;
+        }
+
+        .dish-desc {
+            color: var(--text-dim);
+            font-size: 1rem;
+            line-height: 1.75;
+            margin-bottom: 2rem;
+        }
+
+        .dish-meta {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .dish-price {
+            font-family: var(--font-serif);
+            font-size: 1.85rem;
+            font-weight: 600;
+            color: var(--gold-primary);
+        }
+
+        .dish-line {
+            flex-grow: 1;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(197, 164, 110, 0.45), transparent);
+        }
+
+        .luxury-frame {
+            width: 100%;
+            height: 420px;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-soft);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+            background: var(--bg-card);
+            position: relative;
+        }
+
+        .luxury-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+            display: block;
+        }
+
+        .story-row:hover .luxury-frame img {
+            transform: scale(1.05);
+        }
+
+        /* --- Chef Specials Banner --- */
+        .dark-accent-bg {
+            background-color: #07090B;
+            border-top: 1px solid var(--border-soft);
+            border-bottom: 1px solid var(--border-soft);
+        }
+
+        .special-wide-card {
+            display: flex;
+            background: var(--bg-card);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-soft);
+            align-items: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+        }
+
+        .wide-img {
+            width: 48%;
+            height: 400px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .wide-info {
+            padding: 4.5rem;
+            width: 52%;
+        }
+
+        .wide-info h3 {
+            font-size: 2.3rem;
+            margin-bottom: 1rem;
+            color: #FFFFFF;
+        }
+
+        .wide-info p {
+            color: var(--text-dim);
+            font-size: 1.05rem;
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
+
+        /* --- Classical Luxury Line Menu Grid --- */
+        .menu-luxury-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5.5rem;
+        }
+
+        .menu-column h3 {
+            font-size: 1.85rem;
+            color: var(--gold-primary);
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid rgba(197, 164, 110, 0.2);
+            margin-bottom: 2.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .menu-line-item {
+            margin-bottom: 1.8rem;
+            transition: transform 0.2s ease;
+        }
+
+        .menu-line-item:hover {
+            transform: translateX(4px);
+        }
+
+        .item-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .item-title-row h4 {
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: #FFFFFF;
+        }
+
+        .dots {
+            flex-grow: 1;
+            border-bottom: 1px dotted rgba(255, 255, 255, 0.16);
+            margin: 0 1rem;
+        }
+
+        .price {
+            font-family: var(--font-serif);
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gold-primary);
+        }
+
+        .gold-badge {
+            font-family: var(--font-sans);
+            font-size: 0.65rem;
+            letter-spacing: 1px;
+            background: var(--gold-glow);
+            color: var(--gold-primary);
+            border: 1px solid rgba(197, 164, 110, 0.35);
+            padding: 0.18rem 0.5rem;
+            border-radius: 3px;
+            margin-left: 0.6rem;
+            vertical-align: middle;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        /* --- Logistics & Location Panel --- */
+        .logistics-anchor {
+            background: #080A0C;
+            border-top: 1px solid var(--border-soft);
+        }
+
+        .logistics-flex {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+
+        .logistics-panel {
+            background: var(--bg-card);
+            padding: 3.8rem;
+            border-radius: 14px;
+            border: 1px solid var(--border-soft);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .logistics-panel h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #FFFFFF;
+        }
+
+        .cafe-name {
+            font-size: 1.15rem;
+            color: #FFFFFF;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .panel-text {
+            color: var(--text-dim);
+            margin-bottom: 1.5rem;
+        }
+
+        .phone-display {
+            font-family: var(--font-serif);
+            font-size: 2rem;
+            color: var(--gold-primary);
+            margin: 0.5rem 0 1.5rem;
+            font-weight: 600;
+        }
+
+        .gold-link {
+            color: var(--gold-primary);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+        }
+
+        .gold-link:hover {
+            color: var(--gold-hover);
+            text-decoration: underline;
+        }
+
+        /* --- Floating WhatsApp Concierge Button --- */
+        .whatsapp-premium-float {
+            position: fixed;
+            bottom: 2.2rem;
+            right: 2.2rem;
+            z-index: 9999;
+            text-decoration: none;
+        }
+
+        .float-inner {
+            background: rgba(18, 21, 24, 0.9);
+            border: 1px solid var(--gold-primary);
+            padding: 0.85rem 1.6rem;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            color: var(--gold-primary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.8px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            transition: all 0.35s ease;
+        }
+
+        .whatsapp-premium-float:hover .float-inner {
+            background: var(--gold-primary);
+            color: var(--bg-main);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px var(--gold-glow);
+        }
+
+        .whatsapp-premium-float:hover .wa-icon path {
+            fill: var(--bg-main);
+        }
+
+        .float-pulse {
+            position: absolute;
+            inset: -2px;
+            border: 1px solid var(--gold-primary);
+            border-radius: 6px;
+            opacity: 0.4;
+            animation: floatPulse 2.4s infinite ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes floatPulse {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(1.12); opacity: 0; }
+        }
+
+        .wa-icon {
+            width: 19px;
+            height: 19px;
+        }
+
+        .wa-icon path {
+            fill: var(--gold-primary);
+            transition: fill 0.35s ease;
+        }
+
+        /* --- Luxury Footer --- */
+        .noir-footer {
+            padding: 3.5rem 0;
+            text-align: center;
+            background: #050608;
+            font-size: 0.82rem;
+            color: var(--text-dim);
+            border-top: 1px solid var(--border-soft);
+            letter-spacing: 1px;
+        }
+
+        /* --- Fully Responsive Media Breakpoints --- */
+        @media (max-width: 992px) {
+            .story-row, .story-row.reverse {
+                flex-direction: column !important;
+                gap: 2.8rem;
+            }
+            .story-text, .story-image {
+                width: 100%;
+            }
+            .luxury-frame {
+                height: 340px;
+            }
+            .menu-luxury-grid, .logistics-flex {
+                grid-template-columns: 1fr;
+                gap: 3.5rem;
+            }
+            .special-wide-card {
+                flex-direction: column;
+            }
+            .wide-img, .wide-info {
+                width: 100%;
+            }
+            .wide-img {
+                height: 300px;
+            }
+            .wide-info {
+                padding: 2.8rem 2rem;
+            }
+            .luxury-title {
+                font-size: 3.4rem;
+            }
+            .section-padding {
+                padding: 5.5rem 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            h2 {
+                font-size: 2.3rem;
+            }
+            .story-text h3 {
+                font-size: 2.1rem;
+            }
+            .hero-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .gold-btn, .outline-btn {
+                text-align: center;
+            }
+            .logistics-panel {
+                padding: 2.5rem 1.8rem;
+            }
+            .whatsapp-premium-float {
+                bottom: 1.5rem;
+                right: 1.5rem;
+            }
+            .float-inner {
+                padding: 0.75rem 1.2rem;
+                font-size: 0.72rem;
+            }
+        }
+    </style>
+<style>
+.demo-banner{position:relative;background:#252019;color:#e6cfab;padding:11px 5%;text-align:center;font:11px/1.6 Arial,sans-serif;letter-spacing:.04em}.demo-notice{background:#181c22;border:1px solid #5c503c;color:#dcc49c;padding:18px;margin-bottom:28px;font-size:13px}.phone-display{overflow-wrap:anywhere}.item-title-row{gap:10px}.item-title-row h4{min-width:0}.price{flex-shrink:0}.dots{min-width:8px}.luxury-frame img{object-fit:cover}.hero-section{background-image:none!important;background-color:#0b0d0f}.hero-section:before{content:"";position:absolute;inset:15%;border:1px solid #302b23;transform:rotate(-5deg);pointer-events:none}.hero-center{position:relative;z-index:1}.hero-section:after{content:"";position:absolute;inset:20%;border:1px solid #24231f;transform:rotate(5deg);pointer-events:none}.story-row{scroll-margin-top:110px}section[id]{scroll-margin-top:100px}.animate-up,.animate-left,.animate-right{opacity:1!important;transition:transform .8s ease,opacity .8s ease}.animate-up:not(.active-view){transform:translateY(24px)}.animate-left:not(.active-view){transform:translateY(20px)}.animate-right:not(.active-view){transform:translateY(20px)}.navbar{position:sticky!important}.demo-links{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:18px}.demo-links a{color:#c5a46e;min-height:44px;padding:8px}.nav-links a{min-height:44px;display:inline-flex;align-items:center}.whatsapp-premium-float{bottom:18px;right:18px}.float-pulse{display:none}@media(max-width:768px){.nav-flex{display:block}.nav-links{display:flex!important;overflow-x:auto;gap:18px;padding-top:12px;max-width:100%;margin:0}.nav-flex{min-width:0}.nav-links a{flex-shrink:0}.animate-left,.animate-right{max-width:100%}.nav-links a{font-size:10px;white-space:nowrap}.nav-cta{display:none!important}.luxury-title{font-size:clamp(37px,10vw,56px)}.hero-section{min-height:680px;padding:80px 0}.item-title-row{align-items:flex-start}.dots{display:none}.item-title-row h4{font-size:14px}.gold-badge{display:block;width:fit-content;margin:6px 0 0}.price{font-size:20px}.whatsapp-premium-float{position:static;display:block;margin:0 auto;padding:14px 5%;background:#0b0d0f}.float-inner{justify-content:center}.luxury-frame{height:270px}.logistics-panel{padding:26px 20px}.luxury-title{overflow-wrap:normal}.menu-luxury-grid{gap:40px}.section-padding{padding:64px 0}.hero-center{width:90%}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}.animate-up,.animate-left,.animate-right{transform:none!important;opacity:1!important}}
+</style></head>
+<body><div class="demo-banner">DESIGN PREVIEW / PLACEHOLDER IMAGES / PRICES &amp; CONTACT DETAILS NOT VERIFIED</div>
+<!-- Scroll Progress Top Accent Line -->
+<div class="scroll-progress" id="progressBar"></div>
+<!-- Floating Luxury WhatsApp Ordering CTA -->
+<a aria-label="Demo only. No enquiry will be sent." class="whatsapp-premium-float" href="#demo-details">
+<div class="float-pulse"></div>
+<div class="float-inner">
+<svg class="wa-icon" viewbox="0 0 32 32">
+<path d="M16 2A14 14 0 003.3 22.3L2 29.5l7.5-1.3A14 14 0 1016 2zm7.4 19.9c-.3.9-1.5 1.6-2.4 1.7-.7.1-1.6.1-4.7-1.2-3.9-1.6-6.4-5.6-6.6-5.8-.2-.2-1.5-2-1.5-3.8 0-1.8.9-2.7 1.3-3.1.3-.3.8-.5 1.2-.5h.4c.3 0 .6 0 .9.7.3.8 1.1 2.6 1.2 2.8.1.2.1.4 0 .6-.1.2-.2.4-.4.6-.2.2-.4.4-.6.6-.2.2-.4.4-.2.8.4.8 1.9 3.1 4 5 2.7 2.4 5-2.2 5.6-2.2.6 0 3.7 1.7 3.8 1.9.2.2.2.5.1.8z"></path>
+</svg>
+<span>DEMO / NO LIVE ENQUIRIES</span>
+</div>
+</a>
+<!-- Sticky Glassmorphic Navbar -->
+<header class="navbar">
+<div class="container nav-flex">
+<a class="logo" href="#">URBAN CAFE</a>
+<nav class="nav-links">
+<a href="#featured">Featured Menu</a>
+<a href="#specialties">Chef's Specials</a>
+<a href="#main-course">Main Course</a>
+<a href="#contact">Contact</a>
+<a aria-label="Demo only. No enquiry will be sent." class="nav-cta" href="#demo-details">Demo enquiry</a>
+</nav>
+</div>
+</header>
+<!-- Hero Section -->
+<section class="hero-section">
+<div class="container hero-center animate-up">
+<span class="gold-subtitle">A Multi Cuisine Family Restaurant</span>
+<h1 class="luxury-title">Experience Culinary Excellence</h1>
+<p class="hero-desc">A journey of flavor, artistry, and refined ambiance, crafted cleanly for the discerning palate.</p>
+<div class="hero-actions">
+<a class="gold-btn" href="#featured">Explore Menu</a>
+<a aria-label="Demo only. No enquiry will be sent." class="outline-btn" href="#demo-details">Preview contact details</a>
+</div>
+</div>
+</section>
+<!-- Alternating Immersive Menu Showcase -->
+<section class="section-padding" id="featured">
+<div class="container"><div class="demo-notice" id="demo-details">Preview only. Images are original illustrated placeholders, not photographs. Menu text and prices were supplied in the draft and are not verified offers. Real contact destinations are disabled in this public demo.</div>
+<div class="section-header animate-up">
+<span class="gold-subtitle">From Our Kitchen</span>
+<h2>Featured Menu</h2>
+</div>
+<div class="story-menu-wrapper">
+<!-- Dish 1: Momos (Text Left, Image Right) -->
+<div class="story-row">
+<div class="story-text animate-left">
+<span class="dish-number">01</span>
+<span class="dish-tag">Signature Chinese</span>
+<h3>Steamed &amp; Fried Momos</h3>
+<p class="dish-desc">Delicately filled signature parcels presented over house-infused dark pepper clear broth, accompanied by a high-heat roasted chili garlic dipping reduction.</p>
+<div class="dish-meta">
+<span class="dish-price">₹150</span>
+<span class="dish-line"></span>
+</div>
+</div>
+<div class="story-image animate-right">
+<div class="luxury-frame">
+<img alt="Momos placeholder - illustration, not a photograph" decoding="async" loading="lazy" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNTYwIiB2aWV3Qm94PSIwIDAgODAwIDU2MCI+PHJlY3Qgd2lkdGg9IjgwMCIgaGVpZ2h0PSI1NjAiIGZpbGw9IiMxMjE1MTgiLz48cmVjdCB4PSIyNiIgeT0iMjYiIHdpZHRoPSI3NDgiIGhlaWdodD0iNTA4IiByeD0iNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNWM1MDNjIi8+PGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYjc5YTY5IiBzdHJva2Utd2lkdGg9IjMiPjxlbGxpcHNlIGN4PSI0MDAiIGN5PSIyODUiIHJ4PSIxNzUiIHJ5PSIxMTUiLz48ZWxsaXBzZSBjeD0iNDAwIiBjeT0iMjg1IiByeD0iMTQwIiByeT0iODQiLz48cGF0aCBkPSJNMzI1IDI4MHEzNSAtNjAgNzUgMHEzNSAtNjAgNzUgME0zMjUgMzA4aDE1MCIvPjwvZz48dGV4dCB4PSI0MDAiIHk9IjQ1NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsc2VyaWYiIGZvbnQtc2l6ZT0iMjUiIGZpbGw9IiNkNGJhOGUiPk1vbW9zIHBsYWNlaG9sZGVyPC90ZXh0Pjx0ZXh0IHg9IjQwMCIgeT0iNDkzIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgbGV0dGVyLXNwYWNpbmc9IjQiIGZpbGw9IiM4ZTk2YTAiPklNQUdFIFBMQUNFSE9MREVSIC8gTk9UIEEgUEhPVE9HUkFQSDwvdGV4dD48L3N2Zz4="/>
+</div>
+</div>
+</div>
+<!-- Dish 2: Biryani (Image Left, Text Right) -->
+<div class="story-row reverse">
+<div class="story-text animate-right">
+<span class="dish-number">02</span>
+<span class="dish-tag">Royal Mughlai</span>
+<h3>Special Chicken Biryani</h3>
+<p class="dish-desc">Fragrant long-grain basmati rice gently layered on slow *dum* settings with whole spices, served alongside a tender whole chicken leg cut, boiled egg, and fresh cucumber salad.</p>
+<div class="dish-meta">
+<span class="dish-price">₹220</span>
+<span class="dish-line"></span>
+</div>
+</div>
+<div class="story-image animate-left">
+<div class="luxury-frame">
+<img alt="Biryani placeholder - illustration, not a photograph" decoding="async" loading="lazy" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNTYwIiB2aWV3Qm94PSIwIDAgODAwIDU2MCI+PHJlY3Qgd2lkdGg9IjgwMCIgaGVpZ2h0PSI1NjAiIGZpbGw9IiMxMjE1MTgiLz48cmVjdCB4PSIyNiIgeT0iMjYiIHdpZHRoPSI3NDgiIGhlaWdodD0iNTA4IiByeD0iNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNWM1MDNjIi8+PGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYjc5YTY5IiBzdHJva2Utd2lkdGg9IjMiPjxlbGxpcHNlIGN4PSI0MDAiIGN5PSIyODUiIHJ4PSIxNzUiIHJ5PSIxMTUiLz48ZWxsaXBzZSBjeD0iNDAwIiBjeT0iMjg1IiByeD0iMTQwIiByeT0iODQiLz48cGF0aCBkPSJNMzI1IDI4MHEzNSAtNjAgNzUgMHEzNSAtNjAgNzUgME0zMjUgMzA4aDE1MCIvPjwvZz48dGV4dCB4PSI0MDAiIHk9IjQ1NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsc2VyaWYiIGZvbnQtc2l6ZT0iMjUiIGZpbGw9IiNkNGJhOGUiPkJpcnlhbmkgcGxhY2Vob2xkZXI8L3RleHQ+PHRleHQgeD0iNDAwIiB5PSI0OTMiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBsZXR0ZXItc3BhY2luZz0iNCIgZmlsbD0iIzhlOTZhMCI+SU1BR0UgUExBQ0VIT0xERVIgLyBOT1QgQSBQSE9UT0dSQVBIPC90ZXh0Pjwvc3ZnPg=="/>
+</div>
+</div>
+</div>
+<!-- Dish 3: Shakes (Text Left, Image Right) -->
+<div class="story-row">
+<div class="story-text animate-left">
+<span class="dish-number">03</span>
+<span class="dish-tag">Cold Blends</span>
+<h3>Thick Chocolate Shakes</h3>
+<p class="dish-desc">Rich cream cocoa reduction swirls drizzled inside chilled artisanal tall-glass layouts, formulated to deliver the perfect velvety indulgence alongside crisp savory bites.</p>
+<div class="dish-meta">
+<span class="dish-price">₹120</span>
+<span class="dish-line"></span>
+</div>
+</div>
+<div class="story-image animate-right">
+<div class="luxury-frame">
+<img alt="Shake placeholder - illustration, not a photograph" decoding="async" loading="lazy" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNTYwIiB2aWV3Qm94PSIwIDAgODAwIDU2MCI+PHJlY3Qgd2lkdGg9IjgwMCIgaGVpZ2h0PSI1NjAiIGZpbGw9IiMxMjE1MTgiLz48cmVjdCB4PSIyNiIgeT0iMjYiIHdpZHRoPSI3NDgiIGhlaWdodD0iNTA4IiByeD0iNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNWM1MDNjIi8+PGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYjc5YTY5IiBzdHJva2Utd2lkdGg9IjMiPjxlbGxpcHNlIGN4PSI0MDAiIGN5PSIyODUiIHJ4PSIxNzUiIHJ5PSIxMTUiLz48ZWxsaXBzZSBjeD0iNDAwIiBjeT0iMjg1IiByeD0iMTQwIiByeT0iODQiLz48cGF0aCBkPSJNMzI1IDI4MHEzNSAtNjAgNzUgMHEzNSAtNjAgNzUgME0zMjUgMzA4aDE1MCIvPjwvZz48dGV4dCB4PSI0MDAiIHk9IjQ1NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsc2VyaWYiIGZvbnQtc2l6ZT0iMjUiIGZpbGw9IiNkNGJhOGUiPlNoYWtlIHBsYWNlaG9sZGVyPC90ZXh0Pjx0ZXh0IHg9IjQwMCIgeT0iNDkzIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgbGV0dGVyLXNwYWNpbmc9IjQiIGZpbGw9IiM4ZTk2YTAiPklNQUdFIFBMQUNFSE9MREVSIC8gTk9UIEEgUEhPVE9HUkFQSDwvdGV4dD48L3N2Zz4="/>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Chef's Specials Presentation Section -->
+<section class="section-padding dark-accent-bg" id="specialties">
+<div class="container">
+<div class="section-header animate-up">
+<span class="gold-subtitle">Signature Selections</span>
+<h2>Chef's Specials</h2>
+</div>
+<div class="special-wide-card animate-up">
+<img alt="Biryani placeholder - illustration, not a photograph" class="wide-img" decoding="async" loading="lazy" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNTYwIiB2aWV3Qm94PSIwIDAgODAwIDU2MCI+PHJlY3Qgd2lkdGg9IjgwMCIgaGVpZ2h0PSI1NjAiIGZpbGw9IiMxMjE1MTgiLz48cmVjdCB4PSIyNiIgeT0iMjYiIHdpZHRoPSI3NDgiIGhlaWdodD0iNTA4IiByeD0iNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNWM1MDNjIi8+PGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYjc5YTY5IiBzdHJva2Utd2lkdGg9IjMiPjxlbGxpcHNlIGN4PSI0MDAiIGN5PSIyODUiIHJ4PSIxNzUiIHJ5PSIxMTUiLz48ZWxsaXBzZSBjeD0iNDAwIiBjeT0iMjg1IiByeD0iMTQwIiByeT0iODQiLz48cGF0aCBkPSJNMzI1IDI4MHEzNSAtNjAgNzUgMHEzNSAtNjAgNzUgME0zMjUgMzA4aDE1MCIvPjwvZz48dGV4dCB4PSI0MDAiIHk9IjQ1NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsc2VyaWYiIGZvbnQtc2l6ZT0iMjUiIGZpbGw9IiNkNGJhOGUiPkJpcnlhbmkgcGxhY2Vob2xkZXI8L3RleHQ+PHRleHQgeD0iNDAwIiB5PSI0OTMiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBsZXR0ZXItc3BhY2luZz0iNCIgZmlsbD0iIzhlOTZhMCI+SU1BR0UgUExBQ0VIT0xERVIgLyBOT1QgQSBQSE9UT0dSQVBIPC90ZXh0Pjwvc3ZnPg=="/>
+<div class="wide-info">
+<span class="gold-subtitle">House Specialty</span>
+<h3>The Grand Royal Biryani Platter</h3>
+<p>Our kitchen's premier culinary preparation, blending ancestral slow-steamed basmati rice strings with rich aromatic herbs, tenderized farm chicken, and specialized royal garnish.</p>
+<a aria-label="Demo only. No enquiry will be sent." class="gold-btn" href="#demo-details">Demo enquiry</a>
+</div>
+</div>
+</div>
+</section>
+<!-- Classical Luxury Line Menu Grid (Reference Document: 6942.jpg) -->
+<section class="section-padding" id="main-course">
+<div class="container">
+<div class="section-header animate-up">
+<span class="gold-subtitle">Authentic Kitchen Selection</span>
+<h2>Premium Main Course Dishes</h2>
+</div>
+<div class="menu-luxury-grid">
+<!-- Poultry Category -->
+<div class="menu-column animate-left">
+<h3>Chicken Specialties</h3>
+<div class="menu-line-item">
+<div class="item-title-row">
+<h4>Chicken Curry / KOSHA</h4>
+<span class="dots"></span>
+<span class="price">₹160</span>
+</div>
+</div>
+<div class="menu-line-item">
+<div class="item-title-row">
+<h4>Chicken Do Pyaza <span class="gold-badge">Popular</span></h4>
+<span class="dots"></span>
+<span class="price">₹190</span>
+</div>
+</div>
+<div class="menu-line-item">
+<div class="item-title-row">
+<h4>Kadai Chicken</h4>
+<span class="dots"></span>
+<span class="price">₹200</span>
+</div>
+</div>
+<div class="menu-line-item">
+<div class="item-title-row">
+<h4>Handi Chicken</h4>
+<span class="dots"></span>
+<span class="price">₹210</span>
+</div>
+</div>
+<div class="menu-line-item">
+<div class="item-title-row">
+<h4>Chicken Bharta</h4>
+<span class="dots"></span>
+<span class="price">₹230</span>
+</div>
+</div>
+<div class="menu-line-item">
+<div class="item-title-row">
+<h4>Chicken Butter Masala</h4>
+<span class="dots"></span>
+<span class="price">₹190</span>
+</div>
+</div>
+<div class="menu-line-item">
+<div class="item-title-row">
+<h4>Chicken Tikka Br. Masala</h4>
+<span class="dots"></span>
+<span class="price">₹250</span>
+</div>
+</div>
+</div>
+<!-- Mutton Category -->
+<div class="menu-column animate-right">
+<h3>Mutton Specialties</h3>
+<div class="menu-line-item">
+<div class="item-title-row">
+<h4>Mutton Kosha / Curry</h4>
+<span class="dots"></span>
+<span class="price">₹270</span>
+</div>
+</div>
+<div class="menu-line-item">
+<div class="item-title-row">
+<h4>Mutton Rogan Josh <span class="gold-badge">Chef's Choice</span></h4>
+<span class="dots"></span>
+<span class="price">₹280</span>
+</div>
+</div>
+<div class="menu-line-item">
+<div class="item-title-row">
+<h4>Mutton Masala</h4>
+<span class="dots"></span>
+<span class="price">₹300</span>
+</div>
+</div>
+<div class="menu-line-item">
+<div class="item-title-row">
+<h4>Mutton Do Pyaza</h4>
+<span class="dots"></span>
+<span class="price">₹290</span>
+</div>
+</div>
+<div class="menu-line-item">
+<div class="item-title-row">
+<h4>Mutton Kadai</h4>
+<span class="dots"></span>
+<span class="price">₹300</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Logistics & Visit Info -->
+<section class="logistics-anchor section-padding" id="contact">
+<div class="container logistics-flex">
+<div class="logistics-panel animate-up">
+<span class="gold-subtitle">Visit Us</span>
+<h3>Visit the concept</h3>
+<p class="cafe-name">Urban Cafe / design preview</p>
+<p class="panel-text">An approved address, opening hours and map link would be added here. This preview does not give directions to a real business.</p>
+<a aria-label="Demo only. No enquiry will be sent." class="gold-link" href="#demo-details">Preview contact details</a>
+</div>
+<div class="logistics-panel animate-up">
+<span class="gold-subtitle">Contact / Preview Only</span>
+<h3>Start a conversation</h3>
+<p class="panel-text">In a live website, this panel would connect visitors to the approved business contact. No messages or bookings are sent from this sample.</p>
+<p class="phone-display">Contact to be confirmed</p>
+<a aria-label="Demo only. No enquiry will be sent." class="gold-btn" href="#demo-details">Demo enquiry</a>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="noir-footer">
+<div class="container">
+<p>2026 Urban Cafe / Design preview. Placeholder illustrations. No live orders or bookings.</p>
+<div class="demo-links"><a href="urban-cafe.html">Urban Cafe</a><a href="aureum-studio.html">Aureum Studio</a><a href="maison-form.html">Maison Form</a></div></div>
+</footer>
+<!-- Continuous Bidirectional Scroll Motion Script -->
+<script>
+        // Real-time Top Progress Bar Calculation
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            const progressBar = document.getElementById('progressBar');
+            if (progressBar) {
+                progressBar.style.width = scrolled + '%';
+            }
+        });
+
+        // Two-way Intersection Observer (Animates In on Scroll Down, Animates Out on Scroll Up)
+        const observerConfig = {
+            threshold: 0.12,
+            rootMargin: "0px 0px -40px 0px"
+        };
+
+        const continuousObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active-view');
+                } else {
+                    entry.target.classList.remove('active-view');
+                }
+            });
+        }, observerConfig);
+
+        // Attach observer to all dynamic components
+        document.querySelectorAll('.animate-up, .animate-left, .animate-right').forEach(target => {
+            continuousObserver.observe(target);
+        });
+    </script>
+</body>
+</html>
