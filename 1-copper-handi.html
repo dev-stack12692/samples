@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Copper Handi - Dum Biryani &amp; Charcoal Tandoor</title>
+<meta name="description" content="A cinematic restaurant sample site: dum biryani sealed in copper, charcoal tandoor, eleven spices toasted every morning.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Pinyon+Script&family=Tiro+Devanagari+Hindi:ital@0;1&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0908; --bg2:#121009; --cream:#f2e9dc; --cream-dim:#9a9184;
+  --acc:#d9a441; --line:rgba(242,233,220,.14);
+  --serif:'Playfair Display',Georgia,serif; --script:'Pinyon Script',cursive;
+  --hindi:'Tiro Devanagari Hindi',serif; --sans:'Inter',system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scrollbar-width:thin;scrollbar-color:#3a3226 var(--bg)}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{background:var(--bg);color:var(--cream);font-family:var(--sans);font-weight:300;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+::selection{background:var(--acc);color:#0a0908}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+.smallcaps{font-family:var(--sans);font-size:11px;letter-spacing:.28em;text-transform:uppercase;font-weight:400}
+
+/* ---------- loader ---------- */
+#loader{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px}
+#loader .l-brand{font-family:var(--serif);font-weight:700;font-size:clamp(26px,4vw,44px);letter-spacing:.02em}
+#loader .l-brand em{font-family:var(--script);font-style:normal;color:var(--acc);font-size:.9em}
+#loader .l-count{font-family:var(--serif);font-size:13px;letter-spacing:.4em;color:var(--cream-dim)}
+#loader .l-bar{width:min(260px,60vw);height:1px;background:var(--line);position:relative;overflow:hidden}
+#loader .l-bar i{position:absolute;left:0;top:0;height:100%;width:0%;background:var(--acc);display:block}
+
+/* ---------- nav ---------- */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:22px clamp(18px,4vw,54px);mix-blend-mode:difference}
+nav .n-brand{font-family:var(--serif);font-weight:700;font-size:17px;letter-spacing:.04em}
+nav .n-brand span{color:var(--acc)}
+nav ul{display:flex;gap:clamp(14px,2.6vw,34px);list-style:none}
+nav ul a{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--cream);opacity:.75;transition:opacity .3s}
+nav ul a:hover{opacity:1}
+#openBadge{display:flex;align-items:center;gap:8px;font-size:10px;letter-spacing:.22em;text-transform:uppercase}
+#openBadge .dot{width:7px;height:7px;border-radius:50%;background:#58c48a;box-shadow:0 0 10px #58c48a}
+#openBadge.closed .dot{background:#c4584a;box-shadow:0 0 10px #c4584a}
+@media(max-width:820px){nav ul{display:none}}
+
+/* ---------- hero ---------- */
+#hero{position:relative}
+#hero .h-pin{height:100vh;height:100svh;overflow:hidden;position:relative;display:flex;align-items:center}
+#giantWordWrap{position:absolute;left:0;right:0;bottom:-4vw;z-index:1;text-align:center;pointer-events:none;overflow:hidden;height:26vw}
+#giantWordTrack{transition:transform .9s cubic-bezier(.76,0,.24,1)}
+.gword{display:block;height:26vw;font-family:var(--serif);font-weight:900;font-size:26vw;line-height:26vw;color:transparent;-webkit-text-stroke:1.5px rgba(242,233,220,.22);letter-spacing:-.02em;white-space:nowrap}
+.gword.solid{color:rgba(242,233,220,.07);-webkit-text-stroke:0}
+#heroImgStack{position:absolute;inset:0;z-index:0}
+#heroImgStack figure{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .9s ease}
+#heroImgStack figure.on{opacity:1}
+#heroImgStack img{width:min(46vh,80vw);height:min(46vh,80vw);object-fit:cover;border-radius:50%;box-shadow:0 40px 120px rgba(0,0,0,.65);transform:scale(1.02);transition:transform 1.6s cubic-bezier(.22,1,.36,1)}
+#heroImgStack figure.on img{transform:scale(1)}
+#heroImgStack::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 30%,var(--bg) 78%)}
+#heroUi{position:relative;z-index:2;width:100%;padding:0 clamp(18px,4vw,54px);display:grid;grid-template-columns:1fr auto;align-items:end;gap:20px}
+#dishMeta{max-width:460px}
+#dishNum{font-family:var(--serif);font-size:clamp(40px,5.4vw,74px);font-weight:400;color:var(--acc);line-height:1;transition:color .6s}
+#dishNum sup{font-size:.35em;color:var(--cream-dim);letter-spacing:.1em}
+#dishLabel{margin:14px 0 6px;color:var(--cream-dim)}
+#dishName{font-family:var(--serif);font-weight:700;font-size:clamp(30px,3.6vw,52px);line-height:1.04}
+#dishAccent{font-family:var(--script);font-size:clamp(26px,3.2vw,44px);color:var(--acc);display:block;line-height:1.1;transition:color .6s}
+#dishDesc{margin-top:14px;font-size:13.5px;line-height:1.7;color:var(--cream-dim);max-width:340px}
+#dishPrice{margin-top:16px;font-family:var(--serif);font-size:20px;letter-spacing:.04em}
+#dishPrice .om{font-size:10px;letter-spacing:.26em;color:var(--cream-dim);text-transform:uppercase;margin-left:10px}
+#dishList{list-style:none;text-align:right;display:flex;flex-direction:column;gap:9px}
+#dishList li{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--cream-dim);transition:color .5s;position:relative;padding-right:16px}
+#dishList li::after{content:'';position:absolute;right:0;top:50%;width:6px;height:1px;background:var(--cream-dim);transition:all .5s}
+#dishList li.on{color:var(--acc)}
+#dishList li.on::after{background:var(--acc);width:12px}
+#scrollHint{position:absolute;left:clamp(18px,4vw,54px);bottom:26px;z-index:3;display:flex;align-items:center;gap:14px}
+#scrollHint .sh-track{width:120px;height:1px;background:var(--line);position:relative}
+#scrollHint .sh-track i{position:absolute;left:0;top:0;height:100%;width:0;background:var(--acc);display:block}
+#scrollHint span{font-size:9.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--cream-dim)}
+.swap{transition:opacity .45s ease,transform .45s ease}
+.swap.out{opacity:0;transform:translateY(10px)}
+@media(max-width:820px){
+  .gword{font-size:34vw;height:34vw;line-height:34vw}#giantWordWrap{height:34vw;bottom:8vh}
+  #heroImgStack figure{align-items:flex-start;padding-top:12vh}
+  #heroImgStack img{width:min(60vw,32vh);height:min(60vw,32vh)}
+  #heroUi{grid-template-columns:1fr;align-items:end}
+  #dishList{display:none}
+  #dishMeta{padding-bottom:11vh;position:relative;z-index:3}
+  #dishDesc{text-shadow:0 1px 12px rgba(10,9,8,.9)}
+  #dishName,#dishNum{text-shadow:0 1px 14px rgba(10,9,8,.85)}
+}
+
+/* ---------- manifesto ---------- */
+#manifesto{padding:26vh clamp(18px,7vw,110px);background:var(--bg)}
+#manifesto p.mani{font-family:var(--serif);font-weight:400;font-size:clamp(26px,4.2vw,58px);line-height:1.28;max-width:1050px}
+#manifesto .w{opacity:.13;display:inline-block;transition:none}
+#manifesto .w.accent{font-family:var(--script);color:var(--acc);font-size:1.12em}
+#manifesto .m-tag{color:var(--cream-dim);margin-bottom:5vh;display:block}
+
+/* ---------- dum steps (horizontal) ---------- */
+#dum{position:relative;background:var(--bg2)}
+#dum .d-pin{height:100vh;height:100svh;overflow:hidden;display:flex;align-items:center}
+#dumTrack{display:flex;gap:clamp(30px,5vw,80px);padding:0 clamp(18px,6vw,90px);will-change:transform}
+.dstep{flex:0 0 auto;width:min(420px,78vw);border-top:1px solid var(--line);padding-top:26px}
+.dstep .ds-num{font-family:var(--serif);font-size:13px;letter-spacing:.4em;color:var(--acc)}
+.dstep h3{font-family:var(--serif);font-weight:700;font-size:clamp(26px,3vw,40px);margin:14px 0 12px}
+.dstep h3 em{font-family:var(--script);font-weight:400;color:var(--acc);font-size:.85em}
+.dstep p{font-size:13px;line-height:1.75;color:var(--cream-dim)}
+#dum .d-head{padding:12vh clamp(18px,6vw,90px) 0}
+#dum .d-head h2{font-family:var(--serif);font-weight:700;font-size:clamp(30px,4vw,56px)}
+#dum .d-head h2 em{font-family:var(--script);font-weight:400;color:var(--acc)}
+
+/* ---------- mask ---------- */
+#maskSec{position:relative;height:100vh;height:100svh;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--bg)}
+#maskImg{position:absolute;inset:-12%;background:url('https://commons.wikimedia.org/wiki/Special:FilePath/Spiced_Indian_basmati_rice_dish.jpg?width=1280') center/cover;opacity:.2}
+#maskWord{position:relative;z-index:2;font-family:var(--serif);font-weight:900;font-size:clamp(64px,15vw,240px);letter-spacing:.01em;background:url('https://commons.wikimedia.org/wiki/Special:FilePath/Spiced_Indian_basmati_rice_dish.jpg?width=1280') center/cover;-webkit-background-clip:text;background-clip:text;color:transparent;text-align:center;line-height:1}
+#maskSec .m-sub{position:absolute;bottom:9vh;left:0;right:0;text-align:center;z-index:2;color:var(--cream-dim)}
+
+/* ---------- spices ---------- */
+#spices{padding:18vh clamp(18px,6vw,90px);background:var(--bg2);display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(30px,6vw,90px)}
+#spices .sp-left h2{font-family:var(--serif);font-weight:700;font-size:clamp(30px,4vw,54px);line-height:1.15;margin-bottom:8px}
+#spices .sp-left h2 em{font-family:var(--script);font-weight:400;color:var(--acc);font-size:.9em}
+#spices .sp-sub{color:var(--cream-dim);font-size:13px;line-height:1.7;max-width:420px;margin:16px 0 7vh}
+#spiceList{list-style:none}
+#spiceList li{display:flex;align-items:baseline;justify-content:space-between;gap:18px;padding:15px 0;border-bottom:1px solid var(--line)}
+#spiceList .sp-en{font-family:var(--serif);font-size:clamp(17px,2vw,24px);font-weight:400}
+#spiceList .sp-hi{font-family:var(--hindi);font-size:clamp(15px,1.8vw,21px);color:var(--acc);min-width:130px;text-align:right}
+#spiceList .sp-note{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--cream-dim);margin-left:auto;text-align:right}
+#spiceFig{position:relative}
+#spiceFig .sf-stick{position:sticky;top:14vh}
+#spiceFig img{width:100%;height:min(64vh,560px);object-fit:cover;filter:saturate(.92)}
+#spiceFig figcaption{margin-top:12px;color:var(--cream-dim)}
+@media(max-width:820px){#spices{grid-template-columns:1fr}#spiceFig .sf-stick{position:static}#spiceFig img{height:44vh}}
+
+/* ---------- signature menu ---------- */
+#sig{padding:16vh clamp(18px,6vw,90px);background:var(--bg);position:relative}
+#sig h2{font-family:var(--serif);font-weight:700;font-size:clamp(30px,4vw,54px)}
+#sig h2 em{font-family:var(--script);font-weight:400;color:var(--acc)}
+#sigList{list-style:none;margin-top:6vh}
+#sigList li{display:flex;align-items:baseline;justify-content:space-between;padding:20px 0;border-bottom:1px solid var(--line);cursor:pointer}
+#sigList .sn{font-family:var(--serif);font-weight:400;font-size:clamp(22px,3.4vw,44px);transition:transform .45s ease,color .45s ease}
+#sigList li:hover .sn{transform:translateX(18px);color:var(--acc)}
+#sigList .sp2{font-family:var(--serif);font-size:15px;color:var(--cream-dim)}
+#sigList .thumbm{display:none;width:64px;height:64px;object-fit:cover;border-radius:50%;margin-right:16px;flex:0 0 auto}
+#floatImg{position:fixed;z-index:60;width:230px;height:290px;object-fit:cover;pointer-events:none;opacity:0;transform:scale(.92);transition:opacity .35s ease,transform .35s ease;box-shadow:0 30px 80px rgba(0,0,0,.7)}
+#floatImg.on{opacity:1;transform:scale(1)}
+@media(max-width:820px){
+  #sigList li{align-items:center}
+  #sigList .thumbm{display:block}
+  #floatImg{display:none}
+}
+
+/* ---------- full menu tabs ---------- */
+#menu{padding:0 clamp(18px,6vw,90px) 16vh;background:var(--bg)}
+#menuTabs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:6vh}
+#menuTabs button{background:none;border:1px solid var(--line);color:var(--cream-dim);font-family:var(--sans);font-size:10px;letter-spacing:.24em;text-transform:uppercase;padding:11px 18px;cursor:pointer;transition:all .35s}
+#menuTabs button.on{background:var(--acc);border-color:var(--acc);color:#141005}
+#menuGrid{display:grid;grid-template-columns:1fr 1fr;gap:0 clamp(30px,6vw,90px)}
+.mi{display:flex;justify-content:space-between;gap:16px;padding:16px 0;border-bottom:1px solid var(--line)}
+.mi .mn{font-family:var(--serif);font-size:17px}
+.mi .mn span{display:block;font-family:var(--sans);font-size:11.5px;color:var(--cream-dim);margin-top:5px;line-height:1.6}
+.mi .mp{font-family:var(--serif);font-size:15px;color:var(--acc);white-space:nowrap}
+@media(max-width:820px){#menuGrid{grid-template-columns:1fr}}
+
+/* ---------- tandoor ---------- */
+#tandoor{position:relative;min-height:100vh;min-height:100svh;display:flex;align-items:center;overflow:hidden;background:#000}
+#tandoor .t-bg{position:absolute;inset:0;background:url('https://commons.wikimedia.org/wiki/Special:FilePath/Tandoor.jpg?width=1280') center/cover;opacity:.5}
+#tandoor .t-shade{position:absolute;inset:0;background:rgba(6,5,4,.55)}
+#tandoor .t-in{position:relative;z-index:2;padding:0 clamp(18px,6vw,90px);max-width:900px}
+#tandoor h2{font-family:var(--serif);font-weight:700;font-size:clamp(30px,4.4vw,60px);line-height:1.1}
+#tandoor h2 em{font-family:var(--script);font-weight:400;color:var(--acc)}
+#tempCount{font-family:var(--serif);font-weight:900;font-size:clamp(70px,12vw,170px);line-height:1;color:var(--acc);margin:4vh 0 2vh}
+#tempCount sup{font-size:.35em;font-weight:400}
+#tandoor p{font-size:13.5px;line-height:1.8;color:#cfc6b8;max-width:480px}
+.spark{position:absolute;bottom:-10px;width:3px;height:3px;border-radius:50%;background:#e8a53a;z-index:1;animation:rise linear infinite;opacity:0}
+@keyframes rise{0%{transform:translateY(0) translateX(0);opacity:0}8%{opacity:1}100%{transform:translateY(-104vh) translateX(30px);opacity:0}}
+
+/* ---------- kinetic break ---------- */
+#kinetic{padding:20vh 0;background:var(--bg);overflow:hidden}
+#kinetic .k-line{font-family:var(--serif);font-weight:900;font-size:clamp(54px,11vw,180px);line-height:1.02;white-space:nowrap;will-change:transform}
+#kinetic .k-line:nth-child(2){font-family:var(--script);font-weight:400;color:var(--acc);font-size:clamp(58px,12vw,190px)}
+#kinetic .k-line:nth-child(3){color:transparent;-webkit-text-stroke:1.5px rgba(242,233,220,.5)}
+
+/* ---------- house rules ---------- */
+#rules{padding:14vh clamp(18px,6vw,90px);background:var(--bg2)}
+#rules h2{font-family:var(--serif);font-weight:700;font-size:clamp(28px,3.6vw,48px);margin-bottom:6vh}
+#rules h2 em{font-family:var(--script);font-weight:400;color:var(--acc)}
+#rules ol{list-style:none;counter-reset:r}
+#rules li{counter-increment:r;display:grid;grid-template-columns:70px 1fr;gap:20px;padding:22px 0;border-top:1px solid var(--line);align-items:baseline}
+#rules li::before{content:'0' counter(r);font-family:var(--serif);color:var(--acc);font-size:20px}
+#rules li b{font-family:var(--serif);font-weight:700;font-size:19px;display:block;margin-bottom:6px}
+#rules li span{font-size:13px;color:var(--cream-dim);line-height:1.7}
+
+/* ---------- visit ---------- */
+#visit{display:grid;grid-template-columns:1fr 1fr;min-height:88vh;background:var(--bg)}
+#visit .v-img{background:url('https://images.rawpixel.com/editor_1024/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvcHg4ODI5NzctaW1hZ2Uta3d5bzYzdjcuanBn.jpg') center/cover;min-height:44vh;filter:saturate(.9)}
+#visit .v-in{padding:12vh clamp(18px,5vw,80px);display:flex;flex-direction:column;justify-content:center;gap:26px}
+#visit h2{font-family:var(--serif);font-weight:700;font-size:clamp(28px,3.6vw,48px)}
+#visit h2 em{font-family:var(--script);font-weight:400;color:var(--acc)}
+.v-row{display:flex;justify-content:space-between;gap:20px;border-bottom:1px solid var(--line);padding-bottom:14px;font-size:13px}
+.v-row b{font-family:var(--sans);font-weight:400;font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--cream-dim)}
+.v-row span{text-align:right;line-height:1.7}
+#visit .v-cta{display:inline-flex;align-items:center;gap:12px;border:1px solid var(--acc);color:var(--acc);padding:14px 26px;font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;width:max-content;transition:all .35s}
+#visit .v-cta:hover{background:var(--acc);color:#141005}
+#statusLine{font-family:var(--serif);font-size:19px}
+#statusLine .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#58c48a;margin-right:10px;box-shadow:0 0 12px #58c48a}
+#statusLine.closed .dot{background:#c4584a;box-shadow:0 0 12px #c4584a}
+@media(max-width:820px){#visit{grid-template-columns:1fr}}
+
+/* ---------- footer ---------- */
+footer{padding:10vh clamp(18px,6vw,90px) 6vh;background:#070605;border-top:1px solid var(--line)}
+footer .f-brand{font-family:var(--serif);font-weight:900;font-size:clamp(34px,6vw,84px);line-height:1;color:rgba(242,233,220,.16)}
+footer .f-row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;margin-top:5vh;font-size:11px;color:var(--cream-dim);line-height:1.8}
+footer .f-row a{text-decoration:underline;text-underline-offset:3px}
+footer .f-cred{max-width:640px}
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="l-brand">The Copper <em>Handi</em></div>
+  <div class="l-bar"><i id="lbar"></i></div>
+  <div class="l-count"><span id="lnum">0</span> / 100</div>
+</div>
+
+<nav>
+  <div class="n-brand">The Copper <span>Handi</span></div>
+  <ul>
+    <li><a href="#dum">The Dum</a></li>
+    <li><a href="#spices">Spices</a></li>
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#tandoor">Tandoor</a></li>
+    <li><a href="#visit">Visit</a></li>
+  </ul>
+  <div id="openBadge"><span class="dot"></span><span id="obText">Open now</span></div>
+</nav>
+
+<!-- ===================== HERO ===================== -->
+<section id="hero">
+  <div class="h-pin">
+    <div id="heroImgStack"></div>
+    <div id="giantWordWrap"><div id="giantWordTrack"></div></div>
+    <div id="heroUi">
+      <div id="dishMeta">
+        <div id="dishNum">01<sup> / 08</sup></div>
+        <div id="dishLabel" class="smallcaps">Signature - Dum</div>
+        <h1 id="dishName" class="swap">Chicken Dum <span id="dishAccent">Biryani</span></h1>
+        <p id="dishDesc" class="swap">Bone-in chicken and saffron basmati, sealed under dough and slow-cooked for ninety minutes. Opened at your table.</p>
+        <div id="dishPrice" class="swap">&#8377;299 <span class="om">On the menu +</span></div>
+      </div>
+      <ul id="dishList"></ul>
+    </div>
+    <div id="scrollHint"><div class="sh-track"><i id="shbar"></i></div><span>Scroll to serve the next dish</span></div>
+  </div>
+</section>
+
+<!-- ===================== MANIFESTO ===================== -->
+<section id="manifesto">
+  <span class="m-tag smallcaps">The house promise</span>
+  <p class="mani" id="maniText">Sealed with dough. <i>Open</i>ed at the table, never before. The handi travels eight feet from fire to you, and the first breath of steam is <i>yours</i>.</p>
+</section>
+
+<!-- ===================== DUM STEPS ===================== -->
+<section id="dum">
+  <div class="d-head">
+    <span class="smallcaps" style="color:var(--cream-dim)">The method</span>
+    <h2>Five steps. <em>No shortcuts.</em></h2>
+  </div>
+  <div class="d-pin">
+    <div id="dumTrack">
+      <div class="dstep"><div class="ds-num">STEP 01</div><h3>Marinate <em>overnight</em></h3><p>Chicken sits twelve hours in hung curd, browned onion, ginger-garlic and our garam masala. Nothing rushed, nothing powdered fresh.</p></div>
+      <div class="dstep"><div class="ds-num">STEP 02</div><h3>Parboil <em>the rice</em></h3><p>Aged basmati boiled to exactly seventy percent in spiced water - kewra, bay, shah jeera - then drained and rested.</p></div>
+      <div class="dstep"><div class="ds-num">STEP 03</div><h3>Layer <em>by hand</em></h3><p>Rice over chicken, saffron milk over rice, ghee, mint, fried onion. Three layers, always in that order, always by hand.</p></div>
+      <div class="dstep"><div class="ds-num">STEP 04</div><h3>Seal <em>the handi</em></h3><p>A ring of wheat dough pressed around the rim. The lid locks, the steam stays in, the dum begins. Twenty-two minutes on low flame.</p></div>
+      <div class="dstep"><div class="ds-num">STEP 05</div><h3>Lift <em>at the table</em></h3><p>The seal cracks only in front of you. That first cloud of steam took ninety minutes to make and one second to meet you.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== MASK ===================== -->
+<section id="maskSec">
+  <div id="maskImg"></div>
+  <h2 id="maskWord">BIRIYANI</h2>
+  <div class="m-sub smallcaps">Aged basmati - saffron - ghee - smoke</div>
+</section>
+
+<!-- ===================== SPICES ===================== -->
+<section id="spices">
+  <div class="sp-left">
+    <h2>Eleven spices.<br><em>Toasted every morning.</em></h2>
+    <p class="sp-sub">Whole spices arrive raw, get toasted on a low iron tawa before sunrise, and are ground in small batches. Scroll - each one answers in Hindi.</p>
+    <ul id="spiceList"></ul>
+  </div>
+  <figure id="spiceFig">
+    <div class="sf-stick">
+      <img id="spiceImg" alt="Whole Indian spices - cinnamon, bay leaf, cardamom and cloves laid out on jute" loading="lazy">
+      <figcaption class="smallcaps">The morning tawa - whole spices before grinding</figcaption>
+    </div>
+  </figure>
+</section>
+
+<!-- ===================== SIGNATURE ===================== -->
+<section id="sig">
+  <span class="smallcaps" style="color:var(--cream-dim)">Eight dishes, nothing else matters</span>
+  <h2>The <em>signature</em> eight</h2>
+  <ul id="sigList"></ul>
+</section>
+<img id="floatImg" alt="" aria-hidden="true">
+
+<!-- ===================== FULL MENU ===================== -->
+<section id="menu">
+  <div id="menuTabs"></div>
+  <div id="menuGrid"></div>
+</section>
+
+<!-- ===================== TANDOOR ===================== -->
+<section id="tandoor">
+  <div class="t-bg"></div>
+  <div class="t-shade"></div>
+  <div id="sparks"></div>
+  <div class="t-in">
+    <span class="smallcaps" style="color:var(--cream-dim)">Charcoal, clay, patience</span>
+    <h2>The tandoor <em>never cools.</em></h2>
+    <div id="tempCount">0<sup>&deg;C</sup></div>
+    <p>Lit at six every morning and never allowed to die before midnight. Naan slapped to its walls, kebabs lowered into its throat. Forty-year-old clay, charcoal only - no gas has ever touched it.</p>
+  </div>
+</section>
+
+<!-- ===================== KINETIC ===================== -->
+<section id="kinetic">
+  <div class="k-line" data-dir="1">BUTTER. BUTTER. BUTTER.</div>
+  <div class="k-line" data-dir="-1">Ghee.</div>
+  <div class="k-line" data-dir="1">PATIENCE. PATIENCE.</div>
+</section>
+
+<!-- ===================== RULES ===================== -->
+<section id="rules">
+  <h2>House <em>rules</em></h2>
+  <ol>
+    <li><div><b>The handi opens at your table</b><span>Never in the kitchen, never on the way. If the seal is broken, the handi goes back and a new one is made.</span></div></li>
+    <li><div><b>No biryani past ten</b><span>When the day's handis are done, they are done. Tomorrow's marination has already begun.</span></div></li>
+    <li><div><b>Spices are toasted, never bought ground</b><span>Eleven whole spices, one iron tawa, every single morning since the first day.</span></div></li>
+    <li><div><b>Eat with your hands</b><span>Cutlery is available and nobody will judge you. But the biryani tastes better the old way.</span></div></li>
+  </ol>
+</section>
+
+<!-- ===================== VISIT ===================== -->
+<section id="visit">
+  <div class="v-img" role="img" aria-label="Warmly lit restaurant interior"></div>
+  <div class="v-in">
+    <h2>Come <em>hungry.</em></h2>
+    <div id="statusLine"><span class="dot"></span><span id="statusText">Checking hours...</span></div>
+    <div class="v-row"><b>Address</b><span>Station Road, near Tamluk Junction<br>Tamluk, West Bengal 721636</span></div>
+    <div class="v-row"><b>Hours</b><span>Every day, 12:00 noon - 11:00 PM<br>Biryani until handis last</span></div>
+    <div class="v-row"><b>Call</b><span><a href="tel:+919000000000">+91 90000 00000</a></span></div>
+    <a class="v-cta" href="https://www.google.com/maps/search/?api=1&query=Tamluk+Junction" target="_blank" rel="noopener">Get directions &rarr;</a>
+  </div>
+</section>
+
+<footer>
+  <div class="f-brand">The Copper Handi</div>
+  <div class="f-row">
+    <div class="f-cred">Sample website built as a design demo - not a real restaurant. Photos: Wikimedia Commons &amp; WordPress Photo Directory contributors (CC BY / CC BY-SA / CC0) - <a href="https://commons.wikimedia.org" target="_blank" rel="noopener">credits</a>. Fonts: Playfair Display, Pinyon Script, Tiro Devanagari Hindi, Inter.</div>
+    <div>Design &amp; build: Instinct Agency, Tamluk</div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+/* ============ DATA ============ */
+const W = 'https://commons.wikimedia.org/wiki/Special:FilePath/';
+const DISHES = [
+ {n:'Chicken Dum', a:'Biryani', w:'BIRIYANI', label:'Signature - Dum', d:'Bone-in chicken and saffron basmati, sealed under dough and slow-cooked for ninety minutes. Opened at your table.', p:'\u20B9299', img:'Chicken_Hyderabadi_Biryani.JPG', acc:'#d9a441'},
+ {n:'Butter', a:'Chicken', w:'MAKHANI', label:'Most ordered', d:'Tandoor-charred chicken folded into a velvet tomato-makhan gravy, finished with a cube of white butter.', p:'\u20B9329', img:'Chicken_makhani.jpg', acc:'#e07b39'},
+ {n:'Tandoori', a:'Chicken', w:'TANDOOR', label:'From the clay oven', d:'A twelve-hour marinade of hung curd and Kashmiri chilli, lowered into live charcoal until the edges catch.', p:'\u20B9349', img:'Tandoori_Chicken_-_Dhaka_2015-05-31_2740.JPG', acc:'#c1442e'},
+ {n:'Seekh', a:'Kebab', w:'SEEKH', label:'Charcoal grilled', d:'Hand-minced mutton pressed onto iron skewers, grilled over embers, basted with ghee and served with mint chutney.', p:'\u20B9299', img:'Seekh_Kebab.JPG', acc:'#cf6b2c'},
+ {n:'Paneer', a:'Tikka', w:'TIKKA', label:'Vegetarian', d:'Fresh paneer, capsicum and onion in an ajwain marinade. Smoky outside, soft inside.', p:'\u20B9279', img:'Paneer_Tikka_(2172840954).jpg', acc:'#e0a93e'},
+ {n:'Dal', a:'Makhani', w:'DAAL', label:'Slow cooked - 18 hrs', d:'Black urad simmered overnight on a low flame, finished with cream and a whisper of charcoal smoke.', p:'\u20B9229', img:'Dal_Makhani.jpg', acc:'#b58130'},
+ {n:'Garlic Butter', a:'Naan', w:'NAAN', label:'From the tandoor wall', d:'Slapped onto the tandoor wall at four hundred degrees, brushed with garlic butter the second it lands.', p:'\u20B969', img:'Naan_baked_in_Tandoor.jpg', acc:'#d8c08a'},
+ {n:'Mango', a:'Lassi', w:'LASSI', label:'To cool down', d:'Alphonso mango churned with thick curd, cardamom and pistachio. The only way to end.', p:'\u20B999', img:'Mango_lassi.jpg', acc:'#e5b93d'}
+];
+const imgUrl = (f,w)=> W + encodeURIComponent(f) + '?width=' + (w||1024);
+
+/* ============ LOADER ============ */
+(function(){
+  let n = 0;
+  const num = document.getElementById('lnum'), bar = document.getElementById('lbar');
+  const t = setInterval(()=>{
+    n = Math.min(100, n + Math.ceil(Math.random()*9));
+    num.textContent = n; bar.style.width = n + '%';
+    if(n >= 100){
+      clearInterval(t);
+      gsap.to('#loader',{yPercent:-100,duration:1,ease:'power4.inOut',delay:.25,onComplete:()=>document.getElementById('loader').remove()});
+    }
+  }, 55);
+})();
+
+/* ============ LENIS ============ */
+const lenis = new Lenis({smoothWheel:true,lerp:.09});
+lenis.on('scroll', ScrollTrigger.update);
+gsap.ticker.add(t=>lenis.raf(t*1000));
+gsap.ticker.lagSmoothing(0);
+
+/* ============ HERO ============ */
+const stack = document.getElementById('heroImgStack');
+const track = document.getElementById('giantWordTrack');
+const listEl = document.getElementById('dishList');
+DISHES.forEach((d,i)=>{
+  const fig = document.createElement('figure');
+  fig.innerHTML = `<img ${i>0?'loading="lazy"':''} src="${imgUrl(d.img)}" alt="${d.n} ${d.a}">`;
+  if(i===0) fig.classList.add('on');
+  stack.appendChild(fig);
+  const g = document.createElement('span');
+  g.className = 'gword' + (i%2 ? '' : ' solid');
+  g.textContent = d.w;
+  track.appendChild(g);
+  const li = document.createElement('li');
+  li.textContent = d.n + ' ' + d.a;
+  if(i===0) li.classList.add('on');
+  listEl.appendChild(li);
+});
+document.getElementById('spiceImg').src = imgUrl('Garam_Masala_new_2008-1.jpg', 1024);
+
+const nameEl = document.getElementById('dishName'),
+      descEl = document.getElementById('dishDesc'),
+      priceEl = document.getElementById('dishPrice'),
+      numEl = document.getElementById('dishNum'),
+      labelEl = document.getElementById('dishLabel'),
+      pin = document.querySelector('#hero .h-pin');
+let cur = 0;
+function setDish(i){
+  if(i === cur) return;
+  const going = i > cur;
+  cur = i;
+  const d = DISHES[i];
+  stack.querySelectorAll('figure').forEach((f,k)=>f.classList.toggle('on',k===i));
+  listEl.querySelectorAll('li').forEach((l,k)=>l.classList.toggle('on',k===i));
+  const gw = track.children[0].offsetHeight || 1;
+  track.style.transform = `translateY(${-i*gw}px)`;
+  [nameEl,descEl,priceEl].forEach(el=>el.classList.add('out'));
+  setTimeout(()=>{
+    nameEl.innerHTML = `${d.n} <span id="dishAccent">${d.a}</span>`;
+    descEl.textContent = d.d;
+    priceEl.innerHTML = `${d.p} <span class="om">On the menu +</span>`;
+    numEl.innerHTML = String(i+1).padStart(2,'0') + '<sup> / 08</sup>';
+    labelEl.textContent = d.label;
+    pin.style.setProperty('--acc', d.acc);
+    numEl.style.color = d.acc;
+    [nameEl,descEl,priceEl].forEach(el=>el.classList.remove('out'));
+  }, 300);
+}
+ScrollTrigger.create({
+  trigger:'#hero', start:'top top', end:'+=700%', pin:'#hero .h-pin', scrub:.6,
+  onUpdate(self){
+    const i = Math.min(7, Math.floor(self.progress*8));
+    setDish(i);
+    document.getElementById('shbar').style.width = (self.progress*100)+'%';
+  }
+});
+
+/* ============ MANIFESTO ============ */
+(function(){
+  const p = document.getElementById('maniText');
+  const words = p.innerHTML.split(/\s+/).map(w=>{
+    const accent = /^<i>.*<\/i>$/.test(w);
+    const clean = w.replace(/<\/?i>/g,'');
+    return `<span class="w${accent?' accent':''}">${clean}</span>`;
+  }).join(' ');
+  p.innerHTML = words;
+  gsap.to('#maniText .w',{opacity:1,stagger:.06,ease:'none',
+    scrollTrigger:{trigger:'#manifesto',start:'top 75%',end:'bottom 55%',scrub:.5}});
+})();
+
+/* ============ DUM HORIZONTAL ============ */
+(function(){
+  const trackEl = document.getElementById('dumTrack');
+  const getX = ()=> -(trackEl.scrollWidth - window.innerWidth + 60);
+  gsap.to(trackEl,{x:getX,ease:'none',
+    scrollTrigger:{trigger:'#dum .d-pin',start:'top top',end:()=>'+='+(trackEl.scrollWidth - window.innerWidth + 400),pin:true,scrub:.6,invalidateOnRefresh:true}});
+})();
+
+/* ============ MASK ============ */
+gsap.fromTo('#maskWord',{scale:.72,opacity:.4},{scale:1,opacity:1,ease:'none',
+  scrollTrigger:{trigger:'#maskSec',start:'top bottom',end:'center center',scrub:.5}});
+gsap.fromTo('#maskImg',{scale:1.15},{scale:1,ease:'none',
+  scrollTrigger:{trigger:'#maskSec',start:'top bottom',end:'bottom top',scrub:.5}});
+
+/* ============ SPICES ============ */
+const SPICES = [
+ ['Saffron','केसर','bloom'],['Green cardamom','हरी इलायची','sweet'],['Black cardamom','बड़ी इलायची','smoke'],
+ ['Cinnamon','दालचीनी','warmth'],['Cloves','लौंग','depth'],['Bay leaf','तेज़ पत्ता','base'],
+ ['Star anise','चक्र फूल','aroma'],['Mace','जावित्री','colour'],['Nutmeg','जायफल','round'],
+ ['Black pepper','काली मिर्च','heat'],['Shahi jeera','शाही जीरा','earth']
+];
+const HI_POOL = 'अआइईउऊकखगघचछजझटतदधनपफबभमयरलवशषसह';
+const sl = document.getElementById('spiceList');
+SPICES.forEach(([en,hi,note])=>{
+  const li = document.createElement('li');
+  li.innerHTML = `<span class="sp-en">${en}</span><span class="sp-note">${note}</span><span class="sp-hi" data-final="${hi}"></span>`;
+  sl.appendChild(li);
+});
+document.querySelectorAll('#spiceList .sp-hi').forEach(el=>{
+  const final = el.dataset.final;
+  let done = false;
+  ScrollTrigger.create({trigger:el,start:'top 88%',once:true,onEnter(){
+    if(done) return; done = true;
+    let step = 0, steps = 14;
+    const t = setInterval(()=>{
+      step++;
+      el.textContent = final.split('').map((c,i)=> (c===' ')?' ':(i < (step/steps)*final.length ? c : HI_POOL[Math.floor(Math.random()*HI_POOL.length)])).join('');
+      if(step>=steps){el.textContent = final;clearInterval(t);}
+    },42);
+  }});
+});
+gsap.fromTo('#spiceImg',{y:-30},{y:30,ease:'none',scrollTrigger:{trigger:'#spices',start:'top bottom',end:'bottom top',scrub:.6}});
+
+/* ============ SIGNATURE + FLOAT IMG ============ */
+const sigList = document.getElementById('sigList');
+const floatImg = document.getElementById('floatImg');
+DISHES.forEach((d,i)=>{
+  const li = document.createElement('li');
+  li.innerHTML = `<img class="thumbm" loading="lazy" src="${imgUrl(d.img,320)}" alt=""><span class="sn">${d.n} ${d.a}</span><span class="sp2">${d.p}</span>`;
+  li.addEventListener('mouseenter',()=>{floatImg.src = imgUrl(d.img,640);floatImg.classList.add('on');});
+  li.addEventListener('mouseleave',()=>floatImg.classList.remove('on'));
+  sigList.appendChild(li);
+});
+window.addEventListener('mousemove',e=>{
+  floatImg.style.left = Math.min(window.innerWidth-250, e.clientX+26)+'px';
+  floatImg.style.top = Math.max(20, e.clientY-145)+'px';
+});
+
+/* ============ MENU TABS ============ */
+const MENU = {
+ 'Biryani & Curries':[
+  ['Chicken Dum Biryani','Saffron basmati, sealed handi, raita & salan','\u20B9299'],
+  ['Mutton Dum Biryani','Slow-cooked mutton, aged rice, extra saffron','\u20B9399'],
+  ['Butter Chicken','Velvet tomato-makhan, white butter','\u20B9329'],
+  ['Dal Makhani','18-hour black urad, cream, smoke','\u20B9229'],
+  ['Paneer Butter Masala','Cashew-tomato gravy, kasuri methi','\u20B9269']],
+ 'Tandoor':[
+  ['Tandoori Chicken','12-hour marinade, live charcoal','\u20B9349'],
+  ['Mutton Seekh Kebab','Hand-minced, iron skewers, ghee baste','\u20B9299'],
+  ['Paneer Tikka','Ajwain marinade, capsicum & onion','\u20B9279'],
+  ['Tandoori Wings','Spicy, charred, lemon & chaat masala','\u20B9259']],
+ 'Breads':[
+  ['Garlic Butter Naan','From the tandoor wall, garlic butter','\u20B969'],
+  ['Butter Naan','Classic, brushed with white butter','\u20B949'],
+  ['Laccha Paratha','Sixteen layers, crushed by hand','\u20B959']],
+ 'Sides & Sweets':[
+  ['Burani Raita','Garlic & roasted cumin curd','\u20B949'],
+  ['Gulab Jamun','Two pieces, warm, cardamom syrup','\u20B989'],
+  ['Phirni','Ground rice, saffron, clay bowl','\u20B999']],
+ 'Drinks':[
+  ['Mango Lassi','Alphonso, thick curd, pistachio','\u20B999'],
+  ['Sweet Lassi','Classic Punjabi, malai top','\u20B979'],
+  ['Masala Chaas','Spiced buttermilk, curry leaf','\u20B959'],
+  ['Cutting Chai','Strong, sweet, small glass','\u20B929']]
+};
+const tabsEl = document.getElementById('menuTabs'), gridEl = document.getElementById('menuGrid');
+Object.keys(MENU).forEach((k,i)=>{
+  const b = document.createElement('button');
+  b.textContent = k; if(i===0)b.classList.add('on');
+  b.onclick = ()=>{
+    tabsEl.querySelectorAll('button').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on'); renderMenu(k);
+  };
+  tabsEl.appendChild(b);
+});
+function renderMenu(k){
+  gridEl.innerHTML = '';
+  MENU[k].forEach(([n,d,p])=>{
+    const div = document.createElement('div');
+    div.className='mi';
+    div.innerHTML = `<div class="mn">${n}<span>${d}</span></div><div class="mp">${p}</div>`;
+    gridEl.appendChild(div);
+  });
+  gsap.fromTo(gridEl.children,{opacity:0,y:14},{opacity:1,y:0,stagger:.05,duration:.5,ease:'power2.out'});
+}
+renderMenu('Biryani & Curries');
+
+/* ============ TANDOOR ============ */
+ScrollTrigger.create({trigger:'#tandoor',start:'top 65%',once:true,onEnter(){
+  const el = document.getElementById('tempCount');
+  const obj = {v:0};
+  gsap.to(obj,{v:480,duration:2.2,ease:'power2.out',onUpdate(){el.innerHTML = Math.round(obj.v)+'<sup>&deg;C</sup>';}});
+}});
+(function(){
+  const box = document.getElementById('sparks');
+  for(let i=0;i<16;i++){
+    const s = document.createElement('span');
+    s.className='spark';
+    s.style.left = (8+Math.random()*84)+'%';
+    s.style.animationDuration = (4+Math.random()*6)+'s';
+    s.style.animationDelay = (Math.random()*6)+'s';
+    s.style.width = s.style.height = (2+Math.random()*2.5)+'px';
+    box.appendChild(s);
+  }
+})();
+
+/* ============ KINETIC ============ */
+document.querySelectorAll('#kinetic .k-line').forEach(line=>{
+  const dir = +line.dataset.dir;
+  gsap.fromTo(line,{x:dir*160},{x:dir*-160,ease:'none',
+    scrollTrigger:{trigger:'#kinetic',start:'top bottom',end:'bottom top',scrub:.5}});
+});
+
+/* ============ REVEALS ============ */
+gsap.utils.toArray('#rules li, .dstep, #visit .v-in > *').forEach(el=>{
+  gsap.fromTo(el,{opacity:0,y:26},{opacity:1,y:0,duration:.9,ease:'power2.out',
+    scrollTrigger:{trigger:el,start:'top 90%',once:true}});
+});
+
+/* ============ OPEN/CLOSED (Asia/Kolkata, 12:00-23:00) ============ */
+function updateStatus(){
+  try{
+    const now = new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Kolkata'}));
+    const h = now.getHours() + now.getMinutes()/60;
+    const open = h >= 12 && h < 23;
+    const badge = document.getElementById('openBadge'), line = document.getElementById('statusLine');
+    badge.classList.toggle('closed', !open);
+    line.classList.toggle('closed', !open);
+    document.getElementById('obText').textContent = open ? 'Open now' : 'Closed';
+    document.getElementById('statusText').textContent = open
+      ? 'Open now - serving until 11:00 PM'
+      : (h < 12 ? 'Closed - opens at 12:00 noon' : 'Closed - opens tomorrow at noon');
+  }catch(e){ document.getElementById('statusText').textContent = 'Open daily, 12 noon - 11 PM'; }
+}
+updateStatus(); setInterval(updateStatus, 60000);
+</script>
+</body>
+</html>
